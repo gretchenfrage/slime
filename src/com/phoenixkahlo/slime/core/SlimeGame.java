@@ -1,7 +1,8 @@
-package com.phoenixkahlo.slime;
+package com.phoenixkahlo.slime.core;
 
+import com.phoenixkahlo.slime.entities.FlappyEntity;
+import com.phoenixkahlo.slime.entities.PhysicsBrickEntity;
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -17,6 +18,7 @@ public class SlimeGame extends StateBasedGame {
             AppGameContainer container = new AppGameContainer(game);
             container.setDisplayMode(1500, 900, false);
             container.setShowFPS(false);
+            container.setTargetFrameRate(60);
             container.start();
         } catch (SlickException e) {
             System.err.println("Failed to initialize game");
@@ -38,7 +40,10 @@ public class SlimeGame extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
-
+        WorldState state = new WorldState(0);
+        state.add(new FlappyEntity());
+        state.add(new PhysicsBrickEntity());
+        addState(state);
     }
 
 }
