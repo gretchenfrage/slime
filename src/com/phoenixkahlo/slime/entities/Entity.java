@@ -1,10 +1,13 @@
-package com.phoenixkahlo.slime.core;
+package com.phoenixkahlo.slime.entities;
 
+import com.phoenixkahlo.slime.core.RenderStage;
+import com.phoenixkahlo.slime.core.UpdateStage;
+import com.phoenixkahlo.slime.core.WorldState;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
 /**
- * Created by Phoenix on 5/5/2017.
+ * A entity within the world that can be added, removed, updated, and rendered.
  */
 public interface Entity {
 

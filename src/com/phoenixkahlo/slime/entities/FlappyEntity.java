@@ -1,7 +1,6 @@
 package com.phoenixkahlo.slime.entities;
 
 import com.phoenixkahlo.slime.assets.ImageAsset;
-import com.phoenixkahlo.slime.core.AbstractEntity;
 import com.phoenixkahlo.slime.core.RenderStage;
 import com.phoenixkahlo.slime.core.UpdateStage;
 import com.phoenixkahlo.slime.core.WorldState;

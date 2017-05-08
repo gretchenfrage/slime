@@ -1,13 +1,17 @@
-package com.phoenixkahlo.slime.core;
+package com.phoenixkahlo.slime.entities;
 
-import org.jbox2d.dynamics.Body;
+import com.phoenixkahlo.slime.core.RenderStage;
+import com.phoenixkahlo.slime.core.UpdateStage;
+import com.phoenixkahlo.slime.core.WorldState;
+import com.phoenixkahlo.slime.entities.Entity;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Phoenix on 5/6/2017.
+ * Abstract implementation of entity that should be extendible for any entity.
  */
 public abstract class AbstractEntity implements Entity {
 
@@ -40,4 +44,5 @@ public abstract class AbstractEntity implements Entity {
     public UpdateStage getUpdateStage() {
         return updateStage;
     }
+
 }
