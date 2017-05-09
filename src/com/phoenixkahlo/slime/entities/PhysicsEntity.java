@@ -4,6 +4,7 @@ import com.phoenixkahlo.slime.core.RenderStage;
 import com.phoenixkahlo.slime.core.UpdateStage;
 import com.phoenixkahlo.slime.functional.PCollectors;
 import com.phoenixkahlo.slime.functional.Vec2Rotation;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.*;
@@ -22,6 +23,10 @@ import java.util.stream.Stream;
  * An abstract entity class that provides helper methods for creating and rendering bodies.
  */
 public abstract class PhysicsEntity extends AbstractEntity {
+
+    public PhysicsEntity() {
+        super(RenderStage.MAIN, UpdateStage.MAIN);
+    }
 
     public PhysicsEntity(RenderStage renderStage, UpdateStage updateStage) {
         super(renderStage, updateStage);
@@ -73,6 +78,18 @@ public abstract class PhysicsEntity extends AbstractEntity {
                     );
                     g.setColor(Color.red);
                     g.draw(slick2DShape);
+                    break;
+                }
+                case CIRCLE: {
+                    CircleShape box2DShape = (CircleShape) fixture.getShape();
+                    float r = box2DShape.getRadius();
+                    g.setColor(Color.green);
+                    g.drawOval(
+                            body.getPosition().x - r,
+                            body.getPosition().y - r,
+                            r * 2,
+                            r * 2
+                    );
                     break;
                 }
                 default: {

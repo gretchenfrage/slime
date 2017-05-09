@@ -43,7 +43,7 @@ public class SlimeGame extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
-        WorldState state = new WorldState(0);
+        WorldState state = new WorldState(0, new Vec2(0, -9.8f));
         new FluidTest1().load(state);
         addState(state);
     }

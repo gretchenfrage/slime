@@ -23,6 +23,8 @@ public abstract class SingleBodyEntity extends PhysicsEntity {
 
     private Body body;
 
+    public SingleBodyEntity() {}
+
     public SingleBodyEntity(RenderStage renderStage, UpdateStage updateStage) {
         super(renderStage, updateStage);
     }
