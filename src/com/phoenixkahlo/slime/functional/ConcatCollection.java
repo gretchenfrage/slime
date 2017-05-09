@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by kahlo on 5/6/2017.
+ * View two collections as one big immutable collection.
  */
 public class ConcatCollection<E> extends AbstractCollection<E> {
 

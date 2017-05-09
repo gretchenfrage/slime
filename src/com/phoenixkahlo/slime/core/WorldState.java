@@ -1,6 +1,7 @@
 package com.phoenixkahlo.slime.core;
 
 import com.phoenixkahlo.slime.entities.Entity;
+import com.phoenixkahlo.slime.entities.PhysicsStepper;
 import com.sun.javafx.geom.Vec2d;
 import org.jbox2d.dynamics.World;
 import org.newdawn.slick.GameContainer;
@@ -22,8 +23,6 @@ public class WorldState extends BasicGameState {
     private int gameStateID;
 
     private int time = 0;
-    private float physicsTimeDebt = 0;
-    private float physicsTimeStep = 0.01f;
 
     private World physicsWorld;
 
@@ -31,6 +30,8 @@ public class WorldState extends BasicGameState {
     private SortedMap<RenderStage, List<Entity>> renderTree;
     private Stack<Entity> addAccumulator;
     private Stack<Entity> removeAccumulator;
+
+    private PhysicsStepper physicsStepper;
 
     private CameraTransform camera;
 
@@ -42,7 +43,9 @@ public class WorldState extends BasicGameState {
 
     public WorldState(int id, Vec2 gravity) {
         this.gameStateID = id;
+
         physicsWorld = new World(gravity);
+
         updateTree = new TreeMap<>(Comparator.comparing(Enum::ordinal));
         for (UpdateStage stage : UpdateStage.values())
             updateTree.put(stage, new ArrayList<>());
@@ -51,8 +54,14 @@ public class WorldState extends BasicGameState {
             renderTree.put(stage, new ArrayList<>());
         addAccumulator = new Stack<>();
         removeAccumulator = new Stack<>();
+
+        physicsStepper = new PhysicsStepper(0.01f);
+        add(physicsStepper);
+
         camera = new CameraTransform();
+
         scheduledEvents = new TreeMap<>();
+
         inputListeners = new ArrayList<>();
         inputListenerAddAccumulator = new Stack<>();
         inputListenerRemoveAccumulator = new Stack<>();
@@ -81,7 +90,6 @@ public class WorldState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         // update time variable
         time += delta;
-        physicsTimeDebt += delta / 1000f;
         // run input listeners
         while (inputListenerAddAccumulator.size() > 0)
             inputListeners.add(inputListenerAddAccumulator.pop());
@@ -89,21 +97,20 @@ public class WorldState extends BasicGameState {
             inputListeners.remove(inputListenerRemoveAccumulator.pop());
         for (Consumer<Input> listener : inputListeners)
             listener.accept(container.getInput());
-        // step the physics world
-        while (physicsTimeDebt >= physicsTimeStep) {
-            physicsWorld.step(physicsTimeStep, 6, 2);
-            physicsTimeDebt -= physicsTimeStep;
-        }
         // collect add and remove accumulators
         while (addAccumulator.size() > 0) {
             Entity toAdd = addAccumulator.pop();
-            renderTree.get(toAdd.getRenderStage()).add(toAdd);
-            updateTree.get(toAdd.getUpdateStage()).add(toAdd);
+            if (toAdd.getRenderStage() != null)
+                renderTree.get(toAdd.getRenderStage()).add(toAdd);
+            if (toAdd.getUpdateStage() != null)
+                updateTree.get(toAdd.getUpdateStage()).add(toAdd);
         }
         while (removeAccumulator.size() > 0) {
             Entity toRemove = removeAccumulator.pop();
-            renderTree.remove(toRemove.getRenderStage());
-            updateTree.remove(toRemove.getUpdateStage());
+            if (toRemove.getRenderStage() != null)
+                renderTree.remove(toRemove.getRenderStage());
+            if (toRemove.getUpdateStage() != null)
+                updateTree.remove(toRemove.getUpdateStage());
         }
         // update the entities
         updateTree.entrySet().stream()
@@ -158,6 +165,10 @@ public class WorldState extends BasicGameState {
 
     public void removeInputListener(Consumer<Input> listener) {
         inputListenerRemoveAccumulator.push(listener);
+    }
+
+    public PhysicsStepper getPhysicsStepper() {
+        return physicsStepper;
     }
 
 }

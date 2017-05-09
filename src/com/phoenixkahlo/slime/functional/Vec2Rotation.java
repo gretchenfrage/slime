@@ -10,7 +10,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.cos;
 
 /**
- * Created by kahlo on 5/6/2017.
+ * Function for rotating a vector around the origin.
  */
 public class Vec2Rotation implements Function<Vec2, Vec2> {
 

@@ -5,6 +5,7 @@ package com.phoenixkahlo.slime.core;
  */
 public enum UpdateStage {
 
+    PHYSICS,
     MAIN,
 
 }

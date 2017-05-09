@@ -9,10 +9,13 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * Created by kahlo on 5/6/2017.
+ * Additional collectors.
  */
 public class PCollectors {
 
+    /**
+     * Collect a float stream into a float array.
+     */
     public static Collector<Float, ?, float[]> toFloatArray() {
         return new Collector<Float, Collection<Float>, float[]>() {
 

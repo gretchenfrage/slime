@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
- * Created by kahlo on 5/6/2017.
+ * Combine multiple iterators into one iterator.
  */
 public class ConcatIterator<E> implements Iterator<E> {
 

@@ -51,6 +51,10 @@ public abstract class PhysicsEntity extends AbstractEntity {
     }
 
     protected void renderFixtures(Body body, Graphics g) {
+        renderFixtures(body, g, null);
+    }
+
+    protected void renderFixtures(Body body, Graphics g, Color color) {
         Fixture fixture = body.getFixtureList();
         do {
             switch (fixture.getShape().getType()) {
@@ -63,7 +67,7 @@ public abstract class PhysicsEntity extends AbstractEntity {
                             .flatMap(vec -> Stream.of(vec.x, vec.y))
                             .collect(PCollectors.toFloatArray());
                     Shape slick2DShape = new Polygon(verts);
-                    g.setColor(Color.blue);
+                    g.setColor(color != null ? color : Color.blue);
                     g.draw(slick2DShape);
                     break;
                 }
@@ -76,14 +80,14 @@ public abstract class PhysicsEntity extends AbstractEntity {
                             rotation.apply(box2DShape.m_vertex2).x + body.getPosition().x,
                             rotation.apply(box2DShape.m_vertex2).y + body.getPosition().y
                     );
-                    g.setColor(Color.red);
+                    g.setColor(color != null ? color : Color.red);
                     g.draw(slick2DShape);
                     break;
                 }
                 case CIRCLE: {
                     CircleShape box2DShape = (CircleShape) fixture.getShape();
                     float r = box2DShape.getRadius();
-                    g.setColor(Color.green);
+                    g.setColor(color != null ? color : Color.green);
                     g.drawOval(
                             body.getPosition().x - r,
                             body.getPosition().y - r,
