@@ -9,6 +9,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * An abstract entity class that provides helper methods for creating and rendering bodies.
  */
-public class PhysicsEntity extends AbstractEntity {
+public abstract class PhysicsEntity extends AbstractEntity {
 
     public PhysicsEntity(RenderStage renderStage, UpdateStage updateStage) {
         super(renderStage, updateStage);
@@ -52,7 +53,7 @@ public class PhysicsEntity extends AbstractEntity {
                     PolygonShape box2DShape = (PolygonShape) fixture.getShape();
                     float[] verts = Arrays.stream(box2DShape.m_vertices)
                             .limit(box2DShape.m_count)
-                            .map(new Vec2Rotation(-body.getAngle()))
+                            .map(new Vec2Rotation(body.getAngle()))
                             .map(vec -> vec.add(body.getPosition()))
                             .flatMap(vec -> Stream.of(vec.x, vec.y))
                             .collect(PCollectors.toFloatArray());
@@ -63,12 +64,13 @@ public class PhysicsEntity extends AbstractEntity {
                 }
                 case EDGE: {
                     EdgeShape box2DShape = (EdgeShape) fixture.getShape();
-                    float[] verts = Stream.of(box2DShape.m_vertex1, box2DShape.m_vertex2)
-                            .map(new Vec2Rotation(body.getAngle()))
-                            .map(vec -> vec.add(body.getPosition()))
-                            .flatMap(vec -> Stream.of(vec.x, vec.y))
-                            .collect(PCollectors.toFloatArray());
-                    Shape slick2DShape = new Polygon(verts);
+                    Vec2Rotation rotation = new Vec2Rotation(body.getAngle());
+                    Shape slick2DShape = new Line(
+                            rotation.apply(box2DShape.m_vertex1).x + body.getPosition().x,
+                            rotation.apply(box2DShape.m_vertex1).y + body.getPosition().y,
+                            rotation.apply(box2DShape.m_vertex2).x + body.getPosition().x,
+                            rotation.apply(box2DShape.m_vertex2).y + body.getPosition().y
+                    );
                     g.setColor(Color.red);
                     g.draw(slick2DShape);
                     break;
